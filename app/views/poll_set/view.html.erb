@@ -5,25 +5,28 @@
       action: "/poll/new/#{@poll_set._id}"
     },
   ]
+  editable = (current_user.poll_sets.find_by_id @poll_set._id).nil? ? false : true
 %>
     <% if !@polls.nil? && @polls.length > 0 %>
       <% if @poll_set.active %>
-<div class='container centered'>
-  <div class='row span6'>
-        <%= will_paginate @polls %>
-        <table class="table table-bordered table-hover">
-          <tr>
-            <th>Name</th>
-            <th>Status</th>
-            <th>Remove</th>
-          </tr>
-          <% @polls.each do |poll| %>
-            <%= render 'poll_row', poll: poll %>
-          <% end %>
-        </table>
-        <%= will_paginate @polls %>
-  </div>
-</div>
+        <div class='container centered'>
+          <div class='row span6'>
+            <%= will_paginate @polls %>
+            <table class="table table-bordered table-hover">
+              <tr>
+                <th>Name</th>
+                <% if editable %>
+                <th>Status</th>
+                <th>Remove</th>
+                <% end %>
+              </tr>
+              <% @polls.each do |poll| %>
+                <%= render 'poll_row', poll: poll, editable: editable %>
+              <% end %>
+            </table>
+            <%= will_paginate @polls %>
+          </div>
+        </div>
       <% else %>
         <% @polls.each do |poll| %>
           <%= render 'poll_overview', poll: poll %>

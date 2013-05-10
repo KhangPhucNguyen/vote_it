@@ -1,9 +1,11 @@
 <tr>
   <td><a href='/poll/view/<%=poll._id%>'><%=poll.name%></a></td>
-  <% unless poll.active %>
-    <td><a href='/poll/activate/<%=poll._id%>'>Activate</a></td>
-  <% else %>
-    <td><a href='/poll/deactivate/<%=poll._id%>'>Deactivate</a></td>
+  <% if editable %>
+    <% unless poll.active %>
+      <td><a href='/poll/activate/<%=poll._id%>'>Activate</a></td>
+    <% else %>
+      <td><a href='/poll/deactivate/<%=poll._id%>'>Deactivate</a></td>
+    <% end %>
+    <td><a href='/poll/delete/<%=poll._id%>'>Remove</a></td>
   <% end %>
-  <td><a href='/poll/delete/<%=poll._id%>'>Remove</a></td>
 </tr>
