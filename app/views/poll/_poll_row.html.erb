@@ -1,0 +1,9 @@
+<tr>
+  <td><a href='/poll_set/view/<%=poll_set._id%>'><%=poll_set.name%></a></td>
+  <% unless poll_set.active %>
+    <td><a href='/poll_set/activate/<%=poll_set._id%>'>Activate</a></td>
+  <% else %>
+    <td><a href='/poll_set/deactivate/<%=poll_set._id%>'>Deactivate</a></td>
+  <% end %>
+  <td><a href='/poll_set/delete/<%=poll_set._id%>'>Remove</a></td>
+</tr>

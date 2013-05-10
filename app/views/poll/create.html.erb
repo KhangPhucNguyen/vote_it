@@ -1,0 +1,8 @@
+<div class="row-fluid">
+  <% if flash[:login_error] %>
+    <div class="alert alert-error">
+      <%= flash[:login_error] %>
+    </div>
+  <% end %>
+</div>
+<%= render "form"%>

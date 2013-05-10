@@ -1,0 +1,33 @@
+<div class="row-fluid">
+  <% if flash[:login_error] %>
+    <div class="alert alert-error">
+      <%= flash[:login_error] %>
+    </div>
+  <% end %>
+</div>
+<div class='container centered'>
+  <div class='row span5'>
+    <%= form_for(:session, :url => url_for(:controller => 'session', :action => 'signin'), :html => {}) do |f| %>
+      <div class="container">
+        <div class="row">
+          <div class="form-horizontal">
+            <h2 class="text-center"><%= (t "login_form.login") %></h2>
+            <dl class="control-group">
+              <dt class="control-label"><%= (t "login_form.email") %></dt>
+              <dd class="controls"><%= f.text_field :username %></dd>
+            </dl>
+            <dl class="control-group">
+              <dt class="control-label"><%= (t "login_form.password") %></dt>
+              <dd class="controls"><%= f.password_field :password %><br/></dd>
+            </dl>
+            <div class="text-center">
+              <%= f.submit 'Submit', :class => "btn btn-primary" %>
+              <a href='/signup'>Signup</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+

@@ -1,0 +1,114 @@
+<div class='container'>
+    <div class='row'>
+        <form class='form-horizontal' id='question_form' action='/feed_back/submit' name='answers' method='post'>
+            <div id="my-slideshow" class='centered box'>
+                <ul class="bjqs">
+                  <%
+                    questions = Question.all
+                    questions.each do |q|
+                  %>
+                    <li class='bjqs-slide'>
+                        <div class='inner-box'>
+                          <div class='question'><%=q.question%></div>
+                            <div class='control-group'>
+                              <% if q.type == 1 %>
+                                <% Rails.configuration.type_one_answers.each_with_index do |a, score| %>
+                                <label class="radio">
+                                  <input type="radio" name="answers[<%=q._id%>]" value='<%=score%>' class='js_radio'>
+                                  <%=a%>
+                                </label>
+                                <% end %>
+                              <% else %>
+                                <textarea name='answers[<%=q._id%>]'></textarea>
+                              <% end %>
+                            </div>
+                        </div>
+                    </li>
+                  <% end %>
+                </ul>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function getAverage() {
+  var selected_radios= $('.js_radio:checked');
+  var number_of_selected = selected_radios.length;
+  console.log(number_of_selected);
+  var total = 0;
+  selected_radios.each(function() {
+    total += parseInt($(this).val());
+  });
+  console.log(total);
+  return total/number_of_selected;
+}
+
+var alerted = false;
+var previousClass = 'yellow';
+function changeBackground(point) {
+  $('.container').removeClass(previousClass);
+  var colorClass = '';
+  if(point>=0 && point<0.5){
+    colorClass = 'red';
+  } else if (point>=0.5 && point<1.5) {
+    colorClass = 'orange';
+  } else if (point>=1.5 && point<2.5) {
+    colorClass = 'yellow';
+  } else if (point>=2.5 && point<3.5){
+    colorClass = 'green';
+  } else {
+    colorClass = 'rainbow';
+  }
+  console.log(colorClass);
+  console.log(previousClass);
+  if ( colorClass == 'rainbow' && alerted == false) {
+    $('.container').addClass(colorClass);
+    alert('^^ wait a sec and enjoy you kind feedback');
+    alerted = true;
+  } else {
+    if ( previousClass != colorClass ) {
+      $('.container').fadeTo('slow', 0.3, function()
+      {
+        $('.container').addClass(colorClass);
+      }).fadeTo('slow', 1);
+    }
+    $('.container').addClass(colorClass);
+  }
+  previousClass = colorClass;
+}
+
+$(document).ready(function() {
+  $('.js_radio').change(function(){
+    var average = getAverage();
+    changeBackground(average);
+    console.log(average);
+  });
+
+  $('#js_submit_btn').click(function() {
+    console.log('click');
+    $('form#question_form').submit();
+  });
+
+  $('#my-slideshow').bjqs({
+      'height' : 320,
+      'width' : 620,
+
+      'animtype' : 'slide', // accepts 'fade' or 'slide'
+      'animduration' : 450, // how fast the animation are
+      'animspeed' : 4000, // the delay between each slide
+      'automatic' : false, // automatic
+      'showcontrols' : true, // show next and prev controls
+      'centercontrols' : true, // center controls verically
+      'nexttext' : 'Next', // Text for 'next' button (can use HTML)
+      'prevtext' : 'Prev', // Text for 'previous' button (can use HTML)
+      'showmarkers' : true, // Show individual slide markers
+      'centermarkers' : true, // Center markers horizontally
+      'keyboardnav' : true, // enable keyboard navigation
+      'hoverpause' : false, // pause the slider on hover
+      'usecaptions' : false, // show captions for images using the image title tag
+      'randomstart' : false, // start slider at random slide
+      'responsive' : false // enable responsive capabilities (beta)
+  });
+})
+</script>

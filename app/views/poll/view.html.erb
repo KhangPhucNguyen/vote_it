@@ -1,0 +1,118 @@
+<%
+  @menus = []
+%>
+<div class="row-fluid">
+  <% if flash[:message] %>
+    <div class="alert alert-error">
+      <%= flash[:message] %>
+    </div>
+  <% end %>
+</div>
+<div class='container centered'>
+  <div class='row span6 box'>
+    <%= form_for(@poll_answer, :url => '/poll/answer', :html => {}) do |f| %>
+      <input type='hidden' name='poll[id]' value='<%=@poll._id%>'></input>
+      <div class='question'><a href="#voteDetail" data-toggle="modal"><%=@poll.name%></a></div>
+      <div class='control-group'>
+        <% @poll.poll_options.each do |option| %>
+          <label class="radio">
+            <input type="radio" name="poll_answer[poll_option_id]" value='<%=option._id%>' class='js_radio'>
+            <%=option.name%>
+          </label>
+        <% end %>
+      </div>
+      <div class="text-center">
+        <%= f.submit 'Submit', :class => "btn btn-primary" %>
+        <a href='/poll/overview/<%=@poll._id%>'>Result</a>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="voteDetail" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel"><%=@poll.name%></h3>
+  </div>
+  <div class="modal-body">
+    <p><%=@poll.details%></p>
+  </div>
+  <div class="modal-footer">
+  </div>
+</div>
+
+<script>
+//function getAverage() {
+//  var selected_radios= $('.js_radio:checked');
+//  var number_of_selected = selected_radios.length;
+//  console.log(number_of_selected);
+//  var total = 0;
+//  selected_radios.each(function() {
+//    total += parseInt($(this).val());
+//  });
+//  console.log(total);
+//  return total/number_of_selected;
+//}
+//
+//var alerted = false;
+//var previousClass = 'yellow';
+//function changeBackground(point) {
+//  $('.container').removeClass(previousClass);
+//  var colorClass = '';
+//  if(point>=0 && point<0.5){
+//    colorClass = 'red';
+//  } else if (point>=0.5 && point<1.5) {
+//    colorClass = 'orange';
+//  } else if (point>=1.5 && point<2.5) {
+//    colorClass = 'yellow';
+//  } else if (point>=2.5 && point<3.5){
+//    colorClass = 'green';
+//  } else {
+//    colorClass = 'rainbow';
+//  }
+//  console.log(colorClass);
+//  console.log(previousClass);
+//  if ( colorClass == 'rainbow' && alerted == false) {
+//    $('.container').addClass(colorClass);
+//    alert('^^ wait a sec and enjoy you kind feedback');
+//    alerted = true;
+//  } else {
+//    if ( previousClass != colorClass ) {
+//      $('.container').fadeTo('slow', 0.3, function()
+//      {
+//        $('.container').addClass(colorClass);
+//      }).fadeTo('slow', 1);
+//    }
+//    $('.container').addClass(colorClass);
+//  }
+//  previousClass = colorClass;
+//}
+
+$(document).ready(function() {
+  $('.js_radio').change(function(){
+    console.log('changed');
+  });
+
+  $('#my-slideshow').bjqs({
+      'height' : 320,
+      'width' : 620,
+
+      'animtype' : 'slide', // accepts 'fade' or 'slide'
+      'animduration' : 450, // how fast the animation are
+      'animspeed' : 4000, // the delay between each slide
+      'automatic' : false, // automatic
+      'showcontrols' : true, // show next and prev controls
+      'centercontrols' : true, // center controls verically
+      'nexttext' : 'Next', // Text for 'next' button (can use HTML)
+      'prevtext' : 'Prev', // Text for 'previous' button (can use HTML)
+      'showmarkers' : true, // Show individual slide markers
+      'centermarkers' : true, // Center markers horizontally
+      'keyboardnav' : true, // enable keyboard navigation
+      'hoverpause' : false, // pause the slider on hover
+      'usecaptions' : false, // show captions for images using the image title tag
+      'randomstart' : false, // start slider at random slide
+      'responsive' : false // enable responsive capabilities (beta)
+  });
+})
+</script>

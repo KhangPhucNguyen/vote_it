@@ -1,0 +1,24 @@
+<div class='centered'>
+  <div class='row span6'>
+    <%= form_for(@poll_set, :url => url_for(:controller => 'poll_set', :action => 'create'), :html => {}) do |f| %>
+      <div class="">
+        <div class="row">
+          <div class="form-horizontal">
+            <h2 class="text-center"><%= (t "poll_set") %></h2>
+            <dl class="control-group">
+              <dt class="control-label">Option Name</dt>
+              <dd class="controls"><%= f.text_field :name %></dd>
+            </dl>
+            <dl class="control-group">
+              <dt class="control-label">Option Details</dt>
+              <dd class="controls"><%= text_area :poll_set, :details, :size => "2x1"%></dd>
+            </dl>
+            <div class="text-center">
+              <%= f.submit 'Submit', :class => "btn btn-primary" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

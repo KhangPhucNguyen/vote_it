@@ -1,0 +1,28 @@
+<%
+  @menus = [
+    {
+      name: "Create Poll",
+      action: "/poll/new/#{@poll_set._id}"
+    },
+  ]
+%>
+<div class='container centered'>
+  <div class='row span6'>
+    <% if @polls.length > 0 %>
+      <%= will_paginate @polls %>
+      <table class="table table-bordered table-hover">
+        <tr>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Remove</th>
+        </tr>
+        <% @polls.each do |poll| %>
+          <%= render 'poll_row', poll: poll %>
+        <% end %>
+      </table>
+      <%= will_paginate @polls %>
+    <% end %>
+  </div>
+</div>
+
+

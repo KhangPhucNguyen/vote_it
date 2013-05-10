@@ -1,0 +1,132 @@
+<%
+  colors = [ "#D97041", "#C7604C", "#21323D", "#9D9B7F", "#7D4F6D", "#584A5E", "#660066", "#660099" ]
+%>
+<div class="navbar">
+    <div class="navbar-inner">
+        <a class="brand" href="/">Feed Me Back</a>
+        <div class='control-group'>
+        </div>
+    </div>
+</div>
+<div class='container'>
+  <div class='row'>
+    <div class='centered box'>
+      <canvas id="myChart" width="400" height="400"></canvas>
+    </div>
+    <div class='centered box' style='height:270px;'>
+      <%
+        questions = Question.all
+        questions.each_with_index do |c, index|
+          unless index == 7
+      %>
+      <div style="background-color: <%=colors[index]%>; color: white; padding: 5px;"><%=c.question%>: <%=@chart_data[c._id.to_s].round(2)%></div>
+      <%
+        end
+        end
+      %>
+    </div>
+  </div>
+</div>
+<%= javascript_tag do %>
+var data = [
+  <%
+    index = 0
+    @chart_data.each do |key, value|
+  %>
+  {
+    value : <%=value%>,
+    color: "<%=colors[index]%>"
+  },
+  <%
+    index += 1
+    end
+  %>
+];
+<% end %>
+
+<script>
+console.log(data);
+
+options = {
+  //Boolean - Whether we show the scale above or below the chart segments
+  scaleOverlay : true,
+
+  //Boolean - If we want to override with a hard coded scale
+  scaleOverride : false,
+
+  //** Required if scaleOverride is true **
+  //Number - The number of steps in a hard coded scale
+  scaleSteps : 8,
+  //Number - The value jump in the hard coded scale
+  scaleStepWidth : 0.5,
+  //Number - The centre starting value
+  scaleStartValue : 0.5,
+
+  //Boolean - Show line for each value in the scale
+  scaleShowLine : true,
+
+  //String - The colour of the scale line
+  scaleLineColor : "rgba(0,0,0,.1)",
+
+  //Number - The width of the line - in pixels
+  scaleLineWidth : 1,
+
+  //Boolean - whether we should show text labels
+  scaleShowLabels : true,
+
+  //String - Scale label font declaration for the scale label
+  scaleFontFamily : "'Arial'",
+
+  //Number - Scale label font size in pixels
+  scaleFontSize : 12,
+
+  //String - Scale label font weight style
+  scaleFontStyle : "normal",
+
+  //String - Scale label font colour
+  scaleFontColor : "#666",
+
+  //Boolean - Show a backdrop to the scale label
+  scaleShowLabelBackdrop : true,
+
+  //String - The colour of the label backdrop
+  scaleBackdropColor : "rgba(255,255,255,0.75)",
+
+  //Number - The backdrop padding above & below the label in pixels
+  scaleBackdropPaddingY : 2,
+
+  //Number - The backdrop padding to the side of the label in pixels
+  scaleBackdropPaddingX : 2,
+
+  //Boolean - Stroke a line around each segment in the chart
+  segmentShowStroke : true,
+
+  //String - The colour of the stroke on each segement.
+  segmentStrokeColor : "#fff",
+
+  //Number - The width of the stroke value in pixels
+  segmentStrokeWidth : 2,
+
+  //Boolean - Whether to animate the chart or not
+  animation : true,
+
+  //Number - Amount of animation steps
+  animationSteps : 100,
+
+  //String - Animation easing effect.
+  animationEasing : "easeOutBounce",
+
+  //Boolean - Whether to animate the rotation of the chart
+  animateRotate : true,
+
+  //Boolean - Whether to animate scaling the chart from the centre
+  animateScale : false,
+
+  //Function - This will fire when the animation of the chart is complete.
+  onAnimationComplete : null
+};
+
+//Get the context of the canvas element we want to select
+var ctx = document.getElementById("myChart").getContext("2d");
+var myNewChart = new Chart(ctx).PolarArea(data, options);
+</script>

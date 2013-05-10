@@ -1,0 +1,26 @@
+<div class="row-fluid">
+  <% if flash[:message] %>
+    <div class="alert alert-error">
+      <%= flash[:message] %>
+    </div>
+  <% end %>
+</div>
+<div class='container centered'>
+  <div class='row span6'>
+    <% if @poll_sets.length > 0 %>
+      <%= will_paginate @poll_sets %>
+      <table class="table table-bordered table-hover">
+        <tr>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Remove</th>
+        </tr>
+        <% @poll_sets.each do |poll_set| %>
+        <%= render 'poll_row', poll_set: poll_set %>
+        <% end %>
+      </table>
+      <%= will_paginate @poll_sets %>
+    <% end %>
+  </div>
+</div>
+

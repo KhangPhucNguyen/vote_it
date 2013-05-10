@@ -1,0 +1,17 @@
+development:
+  sessions:
+    default:
+      database: vote_it
+      hosts:
+        - localhost:27017
+      options:
+        allow_dynamic_fields: false
+
+production:
+  sessions:
+    default:
+      database: vote_it
+      hosts:
+        - localhost:27017
+      options:
+        allow_dynamic_fields: false

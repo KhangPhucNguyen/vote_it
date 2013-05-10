@@ -1,0 +1,28 @@
+<%
+  @menus = [
+    {
+      name: "Manage Votes",
+      action: "/poll/admin"
+    },
+  ]
+%>
+<div class='container centered'>
+  <div class='row span6'>
+    <% if @polls.length > 0 %>
+      <%= will_paginate @polls %>
+      <table class="table table-bordered table-hover">
+        <tr>
+          <th>Name</th>
+        </tr>
+        <% @polls.each do |poll| %>
+          <tr>
+            <td><a href='/poll/view/<%=poll._id%>'><%=poll.name%></a></td>
+          </tr>
+        <% end %>
+      </table>
+      <%= will_paginate @polls %>
+    <% end %>
+  </div>
+</div>
+
+

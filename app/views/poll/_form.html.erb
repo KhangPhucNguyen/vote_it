@@ -1,0 +1,43 @@
+<div class='centered'>
+  <div class='row span6'>
+    <%= form_for(@poll, :url => url_for(:controller => 'poll', :action => 'create'), :html => {}) do |f| %>
+      <input type='hidden' name='poll_set_id' value="<%=@poll_set._id unless @poll_set.nil? %>"/>
+      <div class="">
+        <div class="row">
+          <div class="form-horizontal">
+            <h2 class="text-center"><%= (t "poll") %></h2>
+            <dl class="control-group">
+              <dt class="control-label">Option Name</dt>
+              <dd class="controls"><%= f.text_field :name %></dd>
+            </dl>
+            <dl class="control-group">
+              <dt class="control-label">Option Details</dt>
+              <dd class="controls"><%= text_area :poll, :details, :size => "2x1"%></dd>
+            </dl>
+            <div id='js_options'></div>
+            <div class="text-center" ><a href='#' id='js_add'>Add options</a></div>
+            <div class="text-center">
+              <%= f.submit 'Submit', :class => "btn btn-primary" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%= javascript_tag do %>
+var option_no = 1;
+$(document).ready(function(){
+  $('#js_add').click(function() {
+    console.log('click');
+    //if (option_no <= 10) {
+      var container = $('div#js_options');
+      var form = "<div> <dl class='control-group'> <dt class='control-label'>Option " + option_no + "</dt> <dd class='controls'><input type='text' name='poll_options[" + option_no + "][name]'></input></dd> <dt class='control-label'>Option " + option_no + " details</dt><dd class='controls'><input type='text' name='poll_options[" + option_no + "][details]'></input></dd></dl> </div>"
+      container.append(form);
+      option_no += 1;
+    //}
+    return false;
+  });
+});
+<% end %>
