@@ -1,13 +1,6 @@
 <%
   @menus = []
 %>
-<div class="row-fluid">
-  <% if flash[:message] %>
-    <div class="alert alert-error">
-      <%= flash[:message] %>
-    </div>
-  <% end %>
-</div>
 <div class='container centered'>
   <div class='row span6 box'>
     <%= form_for(@poll_answer, :url => '/poll/answer', :html => {}) do |f| %>
@@ -18,7 +11,22 @@
           <label class="radio">
             <input type="radio" name="poll_answer[poll_option_id]" value='<%=option._id%>' class='js_radio'>
             <%=option.name%>
+            <a href='#option<%=option.id%>' data-toggle="modal" style='align:right'>...</a>
           </label>
+
+          <!-- Modal -->
+          <div id="option<%=option.id%>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h3 id="myModalLabel"><%=option.name%></h3>
+            </div>
+            <div class="modal-body">
+              <p><%=option.details.html_safe%></p>
+            </div>
+            <div class="modal-footer">
+            </div>
+          </div>
+
         <% end %>
       </div>
       <div class="text-center">
