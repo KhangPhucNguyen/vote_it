@@ -33,7 +33,6 @@ class PollController < ApplicationController
 
   def answer
     if signed_in?
-      logger.debug request.post?
       if request.post? && !params['poll_answer'].nil? && !params['poll'].nil?
         user = current_user
         poll_id = params['poll']['id']
@@ -165,18 +164,20 @@ class PollController < ApplicationController
           unless value['name'].strip.empty?
             poll_option = PollOption.new (value)
             if poll_option.valid?
-              @poll.poll_options.push(poll_option)
+              poll_option.poll = @poll
+              poll_option.save
             end
           end
         end
         if @poll.poll_options.length > 1 && @poll.save
-          @poll_set.polls.push(@poll)
-          user = current_user
-          user.poll_sets.push(@poll_set)
-          if user.save && @poll_set.save
+          @poll_set.user = current_user
+          @poll.poll_set = @poll_set
+          if @poll_set.save && @poll.save
             flash[:message] = "New vote has been created successfully"
             redirect_to "/poll_set/view/#{@poll.poll_set_id}" and return
           end
+        else
+          flash[:message] = "Poll options must be more than 1"
         end
         render 'create' and return
       end
@@ -187,7 +188,6 @@ class PollController < ApplicationController
   def submit
     if request.post?
       answer = Answer.new request.POST
-      logger.debug answer.inspect
       if answer.save
         redirect_to '/feed_back/overview' and return
       end
