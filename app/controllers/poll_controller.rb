@@ -81,18 +81,47 @@ class PollController < ApplicationController
 
   def edit
     if signed_in?
-      unless params['poll_id'].nil?
-        @poll = get_object params['poll_id']
-        unless params['poll'].nil? || @poll.nil?
+      @poll = get_object params['id']
+      unless @poll.nil?
+        if request.put?
           @poll.attributes = params['poll']
           if @poll.valid? && @poll.save
             redirect_to "/poll/view/#{@poll._id}" and return
           end
         end
+        render 'edit' and return
+      else
+        flash[:message] = "Can not find the poll"
       end
-      render 'edit' and return
     end
 
+    redirect_to root_path
+  end
+
+  def update
+    if signed_in? && !request.get? && !params['poll'].nil? && !params['poll_options'].nil?
+      @poll = get_object params['poll']['id']
+      unless @poll.nil?
+        if request.put?
+          @poll.attributes = params['poll']
+          if @poll.valid? && @poll.save
+            params['poll_options'].each do |key, value|
+              unless value['name'].strip.empty?
+                poll_option = PollOption.new (value)
+                if poll_option.valid?
+                  poll_option.poll = @poll
+                  poll_option.save
+                end
+              end
+            end
+            redirect_to "/poll/view/#{@poll._id}" and return
+          end
+        end
+        render 'edit' and return
+      else
+        flash[:message] = "Can not find the poll"
+      end
+    end
     redirect_to root_path
   end
 

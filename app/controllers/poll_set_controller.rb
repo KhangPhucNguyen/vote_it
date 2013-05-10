@@ -11,7 +11,8 @@ class PollSetController < ApplicationController
 
   def list
     if signed_in?
-      @poll_sets = PollSet.where(:active => true).paginate(:page => params[:page], :per_page => 10)
+      #@poll_sets = PollSet.where(:active => true).paginate(:page => params[:page], :per_page => 10)
+      @poll_sets = PollSet.all.paginate(:page => params[:page], :per_page => 10)
       render 'list' and return
     end
     redirect_to '/signin'
@@ -21,11 +22,12 @@ class PollSetController < ApplicationController
     if signed_in?
       if request.get? && !params['poll_set_id'].nil?
         @poll_set = get_object params['poll_set_id']
-        if !@poll_set.nil? && @poll_set.active
+        #if !@poll_set.nil? && @poll_set.active
+        if !@poll_set.nil?
           @polls = @poll_set.polls.active_polls.paginate(:page => params[:page], :per_page => 10)
           render 'view' and return
         end
-        flash[:message] = 'The poll_set is inactive now.'
+        flash[:message] = 'The poll_set can not be found.'
       end
     end
     redirect_to root_path

@@ -1,18 +1,29 @@
 <%
+  options = poll.poll_options
+  chart_data = {}
+  options.each do |opt|
+    chart_data[opt._id.to_s] = 0
+    opt.poll_answers.each do |ans|
+      chart_data[opt._id.to_s] += 1
+    end
+  end
+  tmp = chart_data.sort {|a1,a2| a2[1]<=>a1[1]}
+  tmp = Hash[tmp]
+  biggest = tmp.values[0]
   colors = [ "#D97041", "#C7604C", "#21323D", "#9D9B7F", "#7D4F6D", "#584A5E", "#660066", "#660099", "#21413D", "#1D0A7F", "#7D126D" , "#7D4A6D", "#584D5E", "#669966"]
 %>
 <div class='container-fluid'>
   <div class='row-fluid'>
     <div class='span12'>
-      <div class='row-fluid centered'><h3><%=@poll.name%></h3></div>
+      <div class='row-fluid centered'><h3><%=poll.name%></h3></div>
       <div class='row-fluid centered' style='padding: 10px; display: block; text-align: center;'>
-        <canvas id="<%=@poll._id%>" width="400" height="400"></canvas>
+        <canvas id="<%=poll._id%>" width="400" height="400"></canvas>
       </div>
       <div class='row-fluid centered box' style='min-height:270px; padding-bottom: 10px;'>
         <%
-          @poll.poll_options.each_with_index do |c, index|
+          poll.poll_options.each_with_index do |c, index|
         %>
-          <div style="background-color: <%=colors[index]%>; color: white; padding: 5px;"><%=c.name%>: <%=@chart_data[c._id.to_s]%></div>
+          <div style="background-color: <%=colors[index]%>; color: white; padding: 5px;"><%=c.name%>: <%=chart_data[c._id.to_s]%></div>
         <%
           end
         %>
@@ -25,7 +36,7 @@
 var data = [
   <%
     index = 0
-    @chart_data.each do |key, value|
+    chart_data.each do |key, value|
   %>
   {
     value : <%=value+1%>,
@@ -48,7 +59,7 @@ options = {
 
   //** Required if scaleOverride is true **
   //Number - The number of steps in a hard coded scale
-  scaleSteps : <%=@biggest%>,
+  scaleSteps : <%=biggest%>,
   //Number - The value jump in the hard coded scale
   scaleStepWidth : 1,
   //Number - The centre starting value
@@ -119,6 +130,6 @@ options = {
 };
 
 //Get the context of the canvas element we want to select
-var ctx = document.getElementById("<%=@poll._id%>").getContext("2d");
+var ctx = document.getElementById("<%=poll._id%>").getContext("2d");
 var myNewChart = new Chart(ctx).PolarArea(data, options);
 <% end %>

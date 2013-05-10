@@ -1,6 +1,10 @@
+<%
+  action = @poll.new_record? ? 'create' : 'update'
+%>
 <div class='centered'>
   <div class='row span6'>
-    <%= form_for(@poll, :url => url_for(:controller => 'poll', :action => 'create'), :html => {}) do |f| %>
+    <%= form_for(@poll, :url => url_for(:controller => 'poll', :action => action), :html => {}) do |f| %>
+      <%=f.hidden_field :id%>
       <input type='hidden' name='poll_set_id' value="<%=@poll_set._id unless @poll_set.nil? %>"/>
       <div class="">
         <div class="row">

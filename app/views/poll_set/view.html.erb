@@ -6,23 +6,27 @@
     },
   ]
 %>
+    <% if !@polls.nil? && @polls.length > 0 %>
+      <% if @poll_set.active %>
 <div class='container centered'>
   <div class='row span6'>
-    <% if @polls.length > 0 %>
-      <%= will_paginate @polls %>
-      <table class="table table-bordered table-hover">
-        <tr>
-          <th>Name</th>
-          <th>Status</th>
-          <th>Remove</th>
-        </tr>
-        <% @polls.each do |poll| %>
-          <%= render 'poll_row', poll: poll %>
-        <% end %>
-      </table>
-      <%= will_paginate @polls %>
-    <% end %>
+        <%= will_paginate @polls %>
+        <table class="table table-bordered table-hover">
+          <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Remove</th>
+          </tr>
+          <% @polls.each do |poll| %>
+            <%= render 'poll_row', poll: poll %>
+          <% end %>
+        </table>
+        <%= will_paginate @polls %>
   </div>
 </div>
-
-
+      <% else %>
+        <% @polls.each do |poll| %>
+          <%= render 'poll_overview', poll: poll %>
+        <% end %>
+      <% end %>
+    <% end %>
