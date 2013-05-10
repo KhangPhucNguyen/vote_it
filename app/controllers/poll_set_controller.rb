@@ -47,17 +47,29 @@ class PollSetController < ApplicationController
   end
 
   def edit
-    if signed_in?
-      unless params['poll_set_id'].nil?
-        @poll_set = get_object params['poll_set_id']
-        unless params['poll_set'].nil? || @poll_set.nil?
+    if signed_in? && !params['poll_set_id'].nil?
+      @poll_set = current_user.poll_sets.find_by_id params['poll_set_id']
+      unless @poll_set.nil?
+        render 'edit' and return
+      else
+        flash[:message] = "You don't have permission to edit this poll set"
+      end
+    end
+    redirect_to root_path
+  end
+
+  def update
+    if signed_in? && !request.get?
+        @poll_set = current_user.poll_sets.find_by_id params['poll_set_id']
+        unless @poll_set.nil?
           @poll_set.attributes = params['poll_set']
           if @poll_set.valid? && @poll_set.save
             redirect_to "/poll_set/view/#{@poll_set._id}" and return
           end
+          render 'edit' and return
+        else
+          flash[:message] = "You don't have permission to edit this poll set"
         end
-      end
-      render 'edit' and return
     end
 
     redirect_to root_path
