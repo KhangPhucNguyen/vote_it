@@ -1,16 +1,22 @@
 <%
+  colors = [ "#D97041", "#C7604C", "#21323D", "#9D9B7F", "#7D4F6D", "#584A5E", "#660066", "#660099", "#21413D", "#1D0A7F", "#7D126D" , "#7D4A6D", "#584D5E", "#669966"]
   options = poll.poll_options
   chart_data = {}
+  index = 0
   options.each do |opt|
-    chart_data[opt._id.to_s] = 0
+    chart_data[opt._id.to_s] = []
+    chart_data[opt._id.to_s][0] = 0
     opt.poll_answers.each do |ans|
-      chart_data[opt._id.to_s] += 1
+      chart_data[opt._id.to_s][0] += 1
     end
+    chart_data[opt._id.to_s][1] = colors[index]
+    index += 1
   end
   tmp = chart_data.sort {|a1,a2| a2[1]<=>a1[1]}
   tmp = Hash[tmp]
-  biggest = tmp.values[0]
-  colors = [ "#D97041", "#C7604C", "#21323D", "#9D9B7F", "#7D4F6D", "#584A5E", "#660066", "#660099", "#21413D", "#1D0A7F", "#7D126D" , "#7D4A6D", "#584D5E", "#669966"]
+  first = tmp.keys[0]
+  first_value = tmp.values[0][0]
+  second = tmp.keys[1]
 %>
 <div class='container-fluid'>
   <div class='row-fluid'>
@@ -21,10 +27,37 @@
       </div>
       <div class='row-fluid centered box' style='min-height:270px; padding-bottom: 10px;'>
         <%
-          poll.poll_options.each_with_index do |c, index|
+          #poll.poll_options.each_with_index do |c, index|
+          rank = 1
+          tmp.each do |key, value|
+            p = poll.poll_options.find_by_id(key)
+            first = p if p._id.to_s == first
+            second = p if p._id.to_s == second
         %>
-          <div style="background-color: <%=colors[index]%>; color: white; padding: 5px;"><%=c.name%>: <%=chart_data[c._id.to_s]%></div>
+          <div class='row-fluid'>
+            <div class='span1'><span class='badge <%
+              case rank
+              when 1
+            %>
+              badge-success
+            <%
+              when 2
+            %>
+              badge-warning
+            <%
+              when 3
+            %>
+              badge-important
+            <%
+              else
+            %>
+            <%
+              end
+            %>'>#<%=rank%></span></div>
+            <div style="background-color: <%=value[1]%>; color: white; padding: 5px;" class='span6'><%=p.name%>: <%=value[0]%></div>
+          </div>
         <%
+            rank += 1
           end
         %>
       </div>
@@ -35,12 +68,11 @@
 <%= javascript_tag do %>
 var data = [
   <%
-    index = 0
     chart_data.each do |key, value|
   %>
   {
-    value : <%=value+1%>,
-    color: "<%=colors[index]%>"
+    value : <%=value[0]+1%>,
+    color: "<%=value[1]%>"
   },
   <%
     index += 1
@@ -59,7 +91,7 @@ options = {
 
   //** Required if scaleOverride is true **
   //Number - The number of steps in a hard coded scale
-  scaleSteps : <%=biggest%>,
+  scaleSteps : <%=first_value%>,
   //Number - The value jump in the hard coded scale
   scaleStepWidth : 1,
   //Number - The centre starting value
