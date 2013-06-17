@@ -103,6 +103,7 @@ class PollController < ApplicationController
       @poll = get_object params['poll']['id']
       unless @poll.nil?
         if request.put?
+          @poll.poll_options = nil
           @poll.attributes = params['poll']
           if @poll.valid? && @poll.save
             params['poll_options'].each do |key, value|

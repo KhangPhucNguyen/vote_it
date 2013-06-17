@@ -18,7 +18,25 @@
               <dt class="control-label">Option Details</dt>
               <dd class="controls"><%= text_area :poll, :details, :size => "2x1"%></dd>
             </dl>
-            <div id='js_options'></div>
+            <div id='js_options'>
+              <%
+                @poll.poll_options.each_with_index do |option, index|
+                  index += 1
+              %>
+              <div>
+                <dl class='control-group'>
+                  <dt class='control-label'>Option <%=index%></dt>
+                  <dd class='controls'>
+                  <input type='text' name='poll_options[<%=index%>][name]' value="<%=option.name%>"></input>
+                  </dd>
+                  <dt class='control-label'>Option <%=index%> details</dt>
+                  <dd class='controls'>
+                  <input type='text' name='poll_options[<%=index%>][details]' value="<%=option.details%>"></input>
+                  </dd>
+                </dl>
+              </div>
+              <% end %>
+            </div>
             <div class="text-center" ><a href='#' id='js_add'>Add options</a></div>
             <div class="text-center">
               <%= f.submit 'Submit', :class => "btn btn-primary" %>
@@ -31,7 +49,7 @@
 </div>
 
 <%= javascript_tag do %>
-var option_no = 1;
+var option_no = <%=@poll.poll_options.count%> + 1;
 $(document).ready(function(){
   $('#js_add').click(function() {
     console.log('click');

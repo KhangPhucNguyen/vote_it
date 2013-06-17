@@ -31,7 +31,9 @@
       </div>
       <div class="text-center">
         <%= f.submit 'Submit', :class => "btn btn-primary" %>
-        <a href='/poll/overview/<%=@poll._id%>'>Result</a>
+        <% if 1 > 2 %>
+          <a href='/poll/overview/<%=@poll._id%>'>Result</a>
+        <% end %>
       </div>
     <% end %>
   </div>
